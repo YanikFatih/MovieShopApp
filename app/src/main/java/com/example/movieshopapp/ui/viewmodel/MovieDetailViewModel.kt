@@ -1,6 +1,8 @@
 package com.example.movieshopapp.ui.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.movieshopapp.data.entity.MovieCart
 import com.example.movieshopapp.data.repo.MoviesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -16,5 +18,23 @@ class MovieDetailViewModel @Inject constructor(var moviesRepository: MoviesRepos
         }
     }
 
+    var movieCartList = MutableLiveData<List<MovieCart>>()
+    fun getMovieCart(userName:String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                movieCartList.value = moviesRepository.getMovieCart(userName)
+            }catch (e:Exception) {
 
+            }
+
+        }
+    }
+
+    fun deleteMovieCart(cartId:Int, userName:String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            moviesRepository.deleteMovieCart(cartId, userName)
+            getMovieCart(userName)
+            //sildikten sonra tekrar yükleme işlemi olmalı ona bakılacak
+        }
+    }
 }

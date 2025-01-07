@@ -16,4 +16,17 @@ interface MovieCartDao {
     @POST("movies/deleteMovie.php")
     @FormUrlEncoded
     suspend fun deleteMovieCart(@Field("cartId") cartId:Int, @Field("userName") userName: String) : CRUDResponse
+
+    @POST("movies/insertMovie.php")
+    @FormUrlEncoded
+    suspend fun addMovieToCart(@Field("name") name:String,
+                               @Field("image") image:String,
+                               @Field("price") price:Int,
+                               @Field("category") category:String,
+                               @Field("rating") rating:Double,
+                               @Field("year") year:Int,
+                               @Field("director") director:String,
+                               @Field("description") description:String,
+                               @Field("orderAmount") orderAmount:Int,
+                               @Field("userName") userName:String) : CRUDResponse
 }

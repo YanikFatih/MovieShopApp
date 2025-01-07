@@ -17,7 +17,11 @@ class MovieCartViewModel @Inject constructor(var movieCartRepository: MovieCartR
 
     fun getMovieCart(userName:String) {
         CoroutineScope(Dispatchers.Main).launch {
-            movieCartList.value = movieCartRepository.getMovieCart(userName)
+            try {
+                movieCartList.value = movieCartRepository.getMovieCart(userName)
+            }catch (e:Exception) {
+
+            }
         }
     }
 
@@ -26,6 +30,12 @@ class MovieCartViewModel @Inject constructor(var movieCartRepository: MovieCartR
             movieCartRepository.deleteMovieCart(cartId, userName)
             getMovieCart(userName)
             //sildikten sonra tekrar yükleme işlemi olmalı ona bakılacak
+        }
+    }
+
+    fun addMovieToCart(name:String, image:String, price:Int, category:String, rating:Double, year:Int, director:String, description:String, orderAmount:Int, userName:String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            movieCartRepository.addMovieToCart(name, image, price, category, rating, year, director, description, orderAmount, userName)
         }
     }
 }

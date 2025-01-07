@@ -2,6 +2,7 @@ package com.example.movieshopapp.retrofit
 
 import android.credentials.CredentialDescription
 import com.example.movieshopapp.data.entity.CRUDResponse
+import com.example.movieshopapp.data.entity.MovieCartResponse
 import com.example.movieshopapp.data.entity.MoviesResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -28,4 +29,12 @@ interface MoviesDao {
                             @Field("description") description:String,
                             @Field("orderAmount") orderAmount:Int,
                             @Field("userName") userName:String) : CRUDResponse
+
+    @POST("movies/getMovieCart.php")
+    @FormUrlEncoded
+    suspend fun getMovieCart(@Field("userName") userName:String) : MovieCartResponse
+
+    @POST("movies/deleteMovie.php")
+    @FormUrlEncoded
+    suspend fun deleteMovieCart(@Field("cartId") cartId:Int, @Field("userName") userName: String) : CRUDResponse
 }

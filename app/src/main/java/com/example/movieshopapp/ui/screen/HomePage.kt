@@ -64,21 +64,6 @@ fun HomePage(navController: NavController, homePageViewModel: HomePageViewModel)
             )
         }
     ) { paddingValues ->
-        /*LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(paddingValues)
-        ) {
-            items(
-                count = moviesList.value.count(),
-                itemContent = {
-                    val movie = moviesList.value[it]
-                    Card(
-                        modifier = Modifier.padding(all = 5.dp)
-                    ) {
-                        Text(text = movie.name, fontSize = 25.sp)
-                    }
-                }
-            )
-        }*/
         LazyVerticalGrid(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
             columns = GridCells.Fixed(2)

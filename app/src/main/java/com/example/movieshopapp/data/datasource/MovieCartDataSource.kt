@@ -14,4 +14,8 @@ class MovieCartDataSource(var movieCartDao: MovieCartDao) {
     suspend fun deleteMovieCart(cartId:Int, userName: String) {
         movieCartDao.deleteMovieCart(cartId, userName)
     }
+
+    suspend fun addMovieToCart(name:String, image:String, price:Int, category:String, rating:Double, year:Int, director:String, description:String, orderAmount:Int, userName:String) {
+        movieCartDao.addMovieToCart(name, image, price, category, rating, year, director, description, orderAmount, userName)
+    }
 }
