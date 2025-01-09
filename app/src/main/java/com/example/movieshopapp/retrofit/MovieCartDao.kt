@@ -1,7 +1,10 @@
 package com.example.movieshopapp.retrofit
 
+import android.database.Observable
 import com.example.movieshopapp.data.entity.CRUDResponse
+import com.example.movieshopapp.data.entity.MovieCart
 import com.example.movieshopapp.data.entity.MovieCartResponse
+import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
@@ -11,7 +14,7 @@ interface MovieCartDao {
 
     @POST("movies/getMovieCart.php")
     @FormUrlEncoded
-    suspend fun getMovieCart(@Field("userName") userName:String) : MovieCartResponse
+    suspend fun getMovieCart(@Field("userName") userName:String) : Response<MovieCartResponse>
 
     @POST("movies/deleteMovie.php")
     @FormUrlEncoded
