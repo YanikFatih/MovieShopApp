@@ -55,6 +55,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.movieshopapp.R
 import com.example.movieshopapp.data.entity.MovieCart
 import com.example.movieshopapp.data.entity.Movies
@@ -67,7 +68,7 @@ import com.skydoves.landscapist.glide.GlideImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieDetailPage(recievedMovide:Movies, movieDetailViewModel: MovieDetailViewModel) {
+fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDetailViewModel: MovieDetailViewModel) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp
     val screenWidth = configuration.screenWidthDp
@@ -110,8 +111,23 @@ fun MovieDetailPage(recievedMovide:Movies, movieDetailViewModel: MovieDetailView
     Scaffold(
         topBar = {
             TopAppBar(
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            navController.navigate("homepage")
+                        },
+                        colors = IconButtonColors(
+                            contentColor = ButtonColor,
+                            containerColor = MainColor,
+                            disabledContentColor = TextColor,
+                            disabledContainerColor = TextColor
+                        )
+                    ) {
+                        Icon(painterResource(R.drawable.go_back_icon),"")
+                    }
+                },
                 title = {
-                    Text(recievedMovide.name)
+                    Text("")
                 },
                 colors = TopAppBarColors(
                     containerColor = MainColor,

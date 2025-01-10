@@ -8,15 +8,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -43,7 +49,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -83,7 +92,22 @@ fun MovieCartPage(navController: NavController, movieCartViewModel: MovieCartVie
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            navController.navigate("homepage")
+                        },
+                        colors = IconButtonColors(
+                            contentColor = ButtonColor,
+                            containerColor = MainColor,
+                            disabledContentColor = TextColor,
+                            disabledContainerColor = TextColor
+                        )
+                    ) {
+                        Icon(painterResource(R.drawable.go_back_icon),"")
+                    }
+                },
                 title = { //sonradan arama kısmı yapılabilir
                     Text("My Cart")
                 },
@@ -173,7 +197,7 @@ fun MovieCartPage(navController: NavController, movieCartViewModel: MovieCartVie
                 }
             }
             Box(
-                modifier = Modifier.offset((screenWidth/8).dp, (screenHeight/1.15).dp).size((screenWidth/1.3).dp,50.dp).clip(
+                modifier = Modifier.offset((screenWidth/11).dp, (screenHeight/1.15).dp).size((screenWidth/1.2).dp,50.dp).clip(
                     RoundedCornerShape(20.dp)
                 ).background(color = ButtonColor)
             ) {
@@ -182,8 +206,25 @@ fun MovieCartPage(navController: NavController, movieCartViewModel: MovieCartVie
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    Text("Toplam tutar:", color = TextColor)
-                    Text("₺${totalCartPrice.value}", color = TextColor)
+                    Text("Cart total:", color = TextColor, modifier = Modifier.padding(start = 5.dp))
+                    Text(" ₺${totalCartPrice.value}", color = TextColor)
+                    Button(
+                        modifier = Modifier.height(50.dp).width((screenWidth/2.2).dp).padding(all = 5.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = InfoBoxColor,
+                            contentColor = ButtonColor
+                        ),
+                        onClick = {}
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("Confirm Cart", fontSize = 18.sp)
+                        }
+                    }
                 }
             }
     }

@@ -24,7 +24,7 @@ fun PageNavigations(homePageViewModel: HomePageViewModel,
         composable("movieDetailPage/{movie}", arguments = listOf(navArgument("movie") { type = NavType.StringType })) {
             val json = it.arguments?.getString("movie")
             val obj = Gson().fromJson(json, Movies::class.java)
-            MovieDetailPage(recievedMovide = obj, movieDetailViewModel = movieDetailViewModel)
+            MovieDetailPage(navController = navController, recievedMovide = obj, movieDetailViewModel = movieDetailViewModel)
         }
         composable("movieCartPage") {
             MovieCartPage(navController = navController, movieCartViewModel = movieCartViewModel)

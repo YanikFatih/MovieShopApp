@@ -17,10 +17,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBarItem
@@ -41,10 +44,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.movieshopapp.R
+import com.example.movieshopapp.ui.theme.ButtonColor
 import com.example.movieshopapp.ui.theme.InfoBoxColor
 import com.example.movieshopapp.ui.theme.MainColor
 import com.example.movieshopapp.ui.theme.TextColor
@@ -69,18 +76,25 @@ fun HomePage(navController: NavController, homePageViewModel: HomePageViewModel)
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = { //sonradan arama kısmı yapılabilir
-                    Text("Movies")
+                    Text(buildAnnotatedString {
+                        withStyle(style = SpanStyle(color = ButtonColor)) {
+                            append(text = "Movie")
+                        }
+                        withStyle(style = SpanStyle(color = TextColor)) {
+                            append("Shop")
+                        }
+                    })
                 },
-                actions = {
+                /*actions = {
                     Icon(painterResource(R.drawable.search_icon),"")
                     IconButton(onClick = {
                         navController.navigate("movieCartPage")
                     }) {
                         Icon(painterResource(R.drawable.cart_icon),"")
                     }
-                },
+                },*/
                 colors = TopAppBarColors(
                     containerColor = MainColor,
                     scrolledContainerColor = MainColor,
@@ -90,7 +104,21 @@ fun HomePage(navController: NavController, homePageViewModel: HomePageViewModel)
                 )
             )
         },
-        bottomBar = {
+        floatingActionButton = @androidx.compose.runtime.Composable {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate("movieCartPage")
+                },
+                content = {
+                    Icon(painterResource(R.drawable.cart_icon),"")
+                },
+                containerColor = ButtonColor,
+                contentColor = TextColor,
+                shape = CircleShape
+            )
+        },
+        containerColor = MainColor
+        /*bottomBar = {
             BottomAppBar(
                 content = {
                     NavigationBarItem(
@@ -122,8 +150,8 @@ fun HomePage(navController: NavController, homePageViewModel: HomePageViewModel)
                 containerColor = MainColor,
                 contentColor = TextColor
             )
-        },
-        containerColor = MainColor
+        },*/
+
     ) { paddingValues ->
         /*LazyColumn(
             modifier = Modifier.fillMaxSize().padding(paddingValues)
@@ -204,13 +232,14 @@ fun HomePage(navController: NavController, homePageViewModel: HomePageViewModel)
                             )
                             {
                                 Box(
-                                    modifier = Modifier.clip(RoundedCornerShape(20.dp)).height((screenHeight/27).dp).width((screenWidth/8).dp).background(color = InfoBoxColor)
+                                    modifier = Modifier.clip(RoundedCornerShape(20.dp)).height((screenHeight/27).dp).width((screenWidth/7).dp).background(color = InfoBoxColor)
                                 ) {
                                     Row(
                                         modifier = Modifier.fillMaxSize(),
-                                        horizontalArrangement = Arrangement.Center,
+                                        horizontalArrangement = Arrangement.SpaceEvenly,
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
+                                        Icon(painterResource(R.drawable.year_icon),"", modifier = Modifier.size(12.dp,12.dp), TextColor)
                                         Text("${movie.year}", color = TextColor, fontSize = 12.sp)
                                     }
                                 }
@@ -219,9 +248,10 @@ fun HomePage(navController: NavController, homePageViewModel: HomePageViewModel)
                                 ) {
                                     Row(
                                         modifier = Modifier.fillMaxSize(),
-                                        horizontalArrangement = Arrangement.Center,
+                                        horizontalArrangement = Arrangement.SpaceEvenly,
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
+                                        Icon(painterResource(R.drawable.star_icon),"", modifier = Modifier.size(12.dp,12.dp), Color.Yellow)
                                         Text("${movie.rating}", color = TextColor, fontSize = 12.sp)
                                     }
                                 }
