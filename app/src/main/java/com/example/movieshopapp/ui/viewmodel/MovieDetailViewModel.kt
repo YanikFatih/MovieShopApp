@@ -2,7 +2,9 @@ package com.example.movieshopapp.ui.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.movieshopapp.data.entity.Favorites
 import com.example.movieshopapp.data.entity.MovieCart
+import com.example.movieshopapp.data.repo.FavoritesRepository
 import com.example.movieshopapp.data.repo.MoviesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -11,7 +13,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MovieDetailViewModel @Inject constructor(var moviesRepository: MoviesRepository) : ViewModel() {
+class MovieDetailViewModel @Inject constructor(var moviesRepository: MoviesRepository, var favoritesRepository: FavoritesRepository) : ViewModel() {
+
+    init {
+        getFavorites()
+    }
 
     fun addMovieToCart(name:String, image:String, price:Int, category:String, rating:Double, year:Int, director:String, description:String, orderAmount:Int, userName:String) {
         CoroutineScope(Dispatchers.Main).launch {
@@ -36,6 +42,26 @@ class MovieDetailViewModel @Inject constructor(var moviesRepository: MoviesRepos
             moviesRepository.deleteMovieCart(cartId, userName)
             getMovieCart(userName)
             //sildikten sonra tekrar yükleme işlemi olmalı ona bakılacak
+        }
+    }
+
+    fun addToFvorites(name:String, image:String, category:String, year:Int, director:String, description:String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            favoritesRepository.addToFavorites(name, image, category, year, director, description)
+        }
+    }
+
+    var favoritesList = MutableLiveData<List<Favorites>>()
+    fun getFavorites() {
+        CoroutineScope(Dispatchers.Main).launch {
+            favoritesList.value = favoritesRepository.getFavorites()
+        }
+    }
+
+    fun deleteFromFavorites(id:Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            favoritesRepository.deleteFromFavorites(id)
+            getFavorites()
         }
     }
 }

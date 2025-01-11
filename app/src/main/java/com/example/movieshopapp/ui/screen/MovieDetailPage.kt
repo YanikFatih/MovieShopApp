@@ -52,6 +52,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -65,6 +66,7 @@ import com.example.movieshopapp.ui.theme.MainColor
 import com.example.movieshopapp.ui.theme.TextColor
 import com.example.movieshopapp.ui.viewmodel.MovieDetailViewModel
 import com.skydoves.landscapist.glide.GlideImage
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,13 +93,16 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
     val movieCartList = movieDetailViewModel.movieCartList.observeAsState(listOf())
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val favoritesList = movieDetailViewModel.favoritesList.observeAsState(listOf())
 
+    val isFavIconClicked = remember { mutableStateOf(false) }
     var size = movieCartList.value.size
-
     var moviesInCart = ArrayList<String>()
+    var moviesInFavorites = ArrayList<String>()
 
     LaunchedEffect(key1 = true) {
         movieDetailViewModel.getMovieCart(userName)
+        movieDetailViewModel.getFavorites()
         tMovieName.value = recievedMovide.name
         tMovieImg.value = recievedMovide.image
         tMoviePrice.value = recievedMovide.price
@@ -106,6 +111,12 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
         tMovieYear.value = recievedMovide.year
         tMovieDirector.value = recievedMovide.director
         tMovieDescription.value = recievedMovide.description
+        for (i in 0..favoritesList.value.size-1) {
+            moviesInFavorites.add(favoritesList.value[i].name)
+        }
+        if (moviesInFavorites.contains(recievedMovide.name)) {
+            isFavIconClicked.value = true
+        }
     }
 
     Scaffold(
@@ -195,19 +206,62 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                     verticalArrangement = Arrangement.SpaceEvenly,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    IconButton(
+                    if(isFavIconClicked.value == false) {
+                        IconButton(
+                            onClick = {
+                                for (i in 0..favoritesList.value.size-1) {
+                                    moviesInFavorites.add(favoritesList.value[i].name)
+                                }
+                                isFavIconClicked.value = true
+                                if(!moviesInFavorites.contains(recievedMovide.name)) {
+                                    movieDetailViewModel.addToFvorites(recievedMovide.name, recievedMovide.image, recievedMovide.category, recievedMovide.year, recievedMovide.director, recievedMovide.description)
+                                }
+                                //moviesInFavorites.add(recievedMovide.name)
+                            },
+                            colors = IconButtonColors(
+                                contentColor = TextColor,
+                                containerColor = MainColor,
+                                disabledContentColor = TextColor,
+                                disabledContainerColor = TextColor
+                            ),
+                        ) {
+                            Icon(painterResource(R.drawable.add_favourites_icon),"", modifier = Modifier.size((screenWidth/12).dp, (screenHeight/20).dp))
+                        }
+                    } else {
+                        IconButton(
+                            onClick = {
+                                for (i in 0..favoritesList.value.size-1) {
+                                    moviesInFavorites.add(favoritesList.value[i].name)
+                                }
+                            },
+                            colors = IconButtonColors(
+                                contentColor = TextColor,
+                                containerColor = MainColor,
+                                disabledContentColor = TextColor,
+                                disabledContainerColor = TextColor
+                            ),
+                        ) {
+                            Icon(painterResource(R.drawable.star_filled),"", modifier = Modifier.size((screenWidth/12).dp, (screenHeight/20).dp))
+                        }
+                    }
+                    /*IconButton(
                         onClick = {
-
+                            for (i in 0..favoritesList.value.size-1) {
+                                moviesInFavorites.add(favoritesList.value[i].name)
+                            }
+                            if(!moviesInFavorites.contains(recievedMovide.name)) {
+                                movieDetailViewModel.addToFvorites(recievedMovide.name, recievedMovide.image, recievedMovide.category, recievedMovide.year, recievedMovide.director, recievedMovide.description)
+                            }
                         },
                         colors = IconButtonColors(
                             contentColor = TextColor,
                             containerColor = MainColor,
                             disabledContentColor = TextColor,
                             disabledContainerColor = TextColor
-                        )
+                        ),
                     ) {
-                        Icon(painterResource(R.drawable.add_favourites_icon),"", modifier = Modifier.size((screenWidth/12).dp, (screenHeight/20).dp))
-                    }
+                        Icon(painterResource(R.drawable.star_filled),"", modifier = Modifier.size((screenWidth/12).dp, (screenHeight/20).dp))
+                    }*/
                     /*Box(
                         modifier = Modifier.clip(RoundedCornerShape(20.dp)).height((screenHeight/20).dp).width((screenWidth/5).dp).background(color = InfoBoxColor)
                     ) {
@@ -378,7 +432,7 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(painterResource(R.drawable.add_to_cart_icon),"")
-                        Text("Add To Cart", fontSize = 18.sp)
+                        Text(stringResource(R.string.add_to_cart), fontSize = 18.sp)
                     }
                 }
             }

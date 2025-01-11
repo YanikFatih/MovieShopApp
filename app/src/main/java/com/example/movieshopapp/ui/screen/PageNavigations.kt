@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.movieshopapp.data.entity.Movies
+import com.example.movieshopapp.ui.viewmodel.FavoritesPageViewModel
 import com.example.movieshopapp.ui.viewmodel.HomePageViewModel
 import com.example.movieshopapp.ui.viewmodel.MovieCartViewModel
 import com.example.movieshopapp.ui.viewmodel.MovieDetailViewModel
@@ -15,7 +16,8 @@ import com.google.gson.Gson
 @Composable
 fun PageNavigations(homePageViewModel: HomePageViewModel,
                     movieDetailViewModel: MovieDetailViewModel,
-                    movieCartViewModel: MovieCartViewModel) {
+                    movieCartViewModel: MovieCartViewModel,
+                    favoritesPageViewModel: FavoritesPageViewModel) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "homepage") {
         composable("homepage") {
@@ -28,6 +30,9 @@ fun PageNavigations(homePageViewModel: HomePageViewModel,
         }
         composable("movieCartPage") {
             MovieCartPage(navController = navController, movieCartViewModel = movieCartViewModel)
+        }
+        composable("favoritesPage") {
+            FavoritesPage(navController = navController, favoritesPageViewModel = favoritesPageViewModel)
         }
     }
 }

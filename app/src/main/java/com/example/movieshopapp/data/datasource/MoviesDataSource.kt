@@ -1,5 +1,6 @@
 package com.example.movieshopapp.data.datasource
 
+import com.example.movieshopapp.data.entity.Favorites
 import com.example.movieshopapp.data.entity.MovieCart
 import com.example.movieshopapp.data.entity.Movies
 import com.example.movieshopapp.retrofit.MoviesDao
