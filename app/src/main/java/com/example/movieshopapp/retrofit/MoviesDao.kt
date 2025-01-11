@@ -1,7 +1,10 @@
 package com.example.movieshopapp.retrofit
 
 import android.credentials.CredentialDescription
+import androidx.room.Dao
+import androidx.room.Insert
 import com.example.movieshopapp.data.entity.CRUDResponse
+import com.example.movieshopapp.data.entity.Favorites
 import com.example.movieshopapp.data.entity.MovieCartResponse
 import com.example.movieshopapp.data.entity.MoviesResponse
 import retrofit2.http.Field
@@ -37,4 +40,5 @@ interface MoviesDao {
     @POST("movies/deleteMovie.php")
     @FormUrlEncoded
     suspend fun deleteMovieCart(@Field("cartId") cartId:Int, @Field("userName") userName: String) : CRUDResponse
+
 }
