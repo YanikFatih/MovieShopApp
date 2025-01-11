@@ -44,6 +44,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -104,53 +105,59 @@ fun HomePage(navController: NavController, homePageViewModel: HomePageViewModel)
                 )
             )
         },
-        floatingActionButton = @androidx.compose.runtime.Composable {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate("movieCartPage")
-                },
-                content = {
-                    Icon(painterResource(R.drawable.cart_icon),"")
-                },
-                containerColor = ButtonColor,
-                contentColor = TextColor,
-                shape = CircleShape
-            )
-        },
-        containerColor = MainColor
-        /*bottomBar = {
+        // floatingActionButton = @androidx.compose.runtime.Composable {
+        // FloatingActionButton(
+        // onClick = {
+        // navController.navigate("movieCartPage")
+        // },
+        // content = {
+        // Icon(painterResource(R.drawable.cart_icon),"")
+        // },
+        // containerColor = ButtonColor,
+        // contentColor = TextColor,
+        // shape = CircleShape
+        // )
+        // },
+        containerColor = MainColor,
+        bottomBar = {
             BottomAppBar(
                 content = {
                     NavigationBarItem(
                         selected = false,
-                        label = { Text("Home", color = TextColor) },
-                        onClick = {},
+                        label = { Text(stringResource(R.string.nav_item_home), color = TextColor) },
+                        onClick = {
+
+                        },
                         icon = { Icon(painterResource(R.drawable.home_icon), "", Modifier.size(28.dp), TextColor) }
                     )
                     NavigationBarItem(
                         selected = false,
-                        label = { Text("Kategoriler", color = TextColor) },
-                        onClick = {},
-                        icon = { Icon(painterResource(R.drawable.category_icon), "", Modifier.size(28.dp), TextColor) }
+                        label = { Text(stringResource(R.string.nav_item_favorites), color = TextColor) },
+                        onClick = {
+                            navController.navigate("favoritesPage")
+                        },
+                        icon = { Icon(painterResource(R.drawable.add_favourites_icon), "", Modifier.size(28.dp), TextColor) }
                     )
+                    // NavigationBarItem(
+                    // selected = false,
+                    // label = { Text("Siz", color = TextColor) },
+                    // onClick = {},
+                    // icon = { Icon(painterResource(R.drawable.profile_icon), "", Modifier.size(28.dp), TextColor) }
+                    // )
                     NavigationBarItem(
                         selected = false,
-                        label = { Text("Siz", color = TextColor) },
-                        onClick = {},
-                        icon = { Icon(painterResource(R.drawable.profile_icon), "", Modifier.size(28.dp), TextColor) }
-                    )
-                    NavigationBarItem(
-                        selected = false,
-                        label = { Text("Sepet", color = TextColor) },
-                        onClick = {},
+                        label = { Text(stringResource(R.string.nav_item_cart), color = TextColor) },
+                        onClick = {
+                            navController.navigate("movieCartPage")
+                        },
                         icon = { Icon(painterResource(R.drawable.cart_icon), "", Modifier.size(28.dp), TextColor) }
                     )
                 },
-                modifier = Modifier.height(90.dp),
-                containerColor = MainColor,
-                contentColor = TextColor
+                modifier = Modifier.height(90.dp).clip(shape = RoundedCornerShape(30.dp, 30.dp, 0.dp, 0.dp)),
+                containerColor = ButtonColor,
+                contentColor = TextColor,
             )
-        },*/
+        },
 
     ) { paddingValues ->
         /*LazyColumn(

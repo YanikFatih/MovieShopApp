@@ -49,6 +49,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -109,7 +110,7 @@ fun MovieCartPage(navController: NavController, movieCartViewModel: MovieCartVie
                     }
                 },
                 title = { //sonradan arama kısmı yapılabilir
-                    Text("My Cart")
+                    Text(stringResource(R.string.my_cart_title))
                 },
                 colors = TopAppBarColors(
                     containerColor = MainColor,
@@ -193,7 +194,7 @@ fun MovieCartPage(navController: NavController, movieCartViewModel: MovieCartVie
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("Empty cart", color = TextColor)
+                    Text(stringResource(R.string.empty_cart), color = TextColor)
                 }
             }
             Box(
@@ -206,7 +207,7 @@ fun MovieCartPage(navController: NavController, movieCartViewModel: MovieCartVie
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    Text("Cart total:", color = TextColor, modifier = Modifier.padding(start = 5.dp))
+                    Text(stringResource(R.string.cart_total), color = TextColor, modifier = Modifier.padding(start = 5.dp))
                     Text(" ₺${totalCartPrice.value}", color = TextColor)
                     Button(
                         modifier = Modifier.height(50.dp).width((screenWidth/2.2).dp).padding(all = 5.dp),
@@ -222,7 +223,7 @@ fun MovieCartPage(navController: NavController, movieCartViewModel: MovieCartVie
                             horizontalArrangement = Arrangement.SpaceEvenly,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Confirm Cart", fontSize = 18.sp)
+                            Text(stringResource(R.string.confirm_cart), fontSize = 18.sp)
                         }
                     }
                 }
