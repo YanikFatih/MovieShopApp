@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">MovieShopApp</string>
+    <string name="my_cart_title">My Cart</string>
+    <string name="empty_cart">Your cart is empty</string>
+    <string name="cart_total">Cart total:</string>
+    <string name="confirm_cart">Confirm Cart</string>
+    <string name="add_to_cart">Add To Cart</string>
+    <string name="nav_item_home">Home</string>
+    <string name="nav_item_favorites">Favorites</string>
+    <string name="nav_item_cart">Cart</string>
+    <string name="tf_label_search">Search</string>
 </resources>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MovieShopApp</string>
+    <string name="my_cart_title">Sepetim</string>
+    <string name="empty_cart">Sepetiniz boş</string>
+    <string name="cart_total">Sepet toplamı:</string>
+    <string name="confirm_cart">Sepeti Onayla</string>
+    <string name="add_to_cart">Sepete Ekle</string>
+    <string name="nav_item_home">Anasayfa</string>
+    <string name="nav_item_favorites">Favoriler</string>
+    <string name="nav_item_cart">Sepet</string>
+    <string name="tf_label_search">Ara</string>
+</resources>
