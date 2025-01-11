@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.movieshopapp.ui.screen.PageNavigations
 import com.example.movieshopapp.ui.theme.MovieShopAppTheme
+import com.example.movieshopapp.ui.viewmodel.FavoritesPageViewModel
 import com.example.movieshopapp.ui.viewmodel.HomePageViewModel
 import com.example.movieshopapp.ui.viewmodel.MovieCartViewModel
 import com.example.movieshopapp.ui.viewmodel.MovieDetailViewModel
@@ -27,6 +28,7 @@ class MainActivity : ComponentActivity() {
         val homePageViewModel:HomePageViewModel by viewModels()
         val movieDetailViewModel:MovieDetailViewModel by viewModels()
         val movieCartViewModel:MovieCartViewModel by viewModels()
+        val favoritesPageViewModel:FavoritesPageViewModel by viewModels()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -34,7 +36,8 @@ class MainActivity : ComponentActivity() {
                 PageNavigations(
                     homePageViewModel = homePageViewModel,
                     movieDetailViewModel = movieDetailViewModel,
-                    movieCartViewModel = movieCartViewModel)
+                    movieCartViewModel = movieCartViewModel,
+                    favoritesPageViewModel = favoritesPageViewModel)
             }
         }
     }
