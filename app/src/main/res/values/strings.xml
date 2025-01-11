@@ -9,4 +9,11 @@
     <string name="nav_item_favorites">Favorites</string>
     <string name="nav_item_cart">Cart</string>
     <string name="tf_label_search">Search</string>
+    <string name="top_rated_filter">Top Rated</string>
+    <string name="action_filter">Action</string>
+    <string name="drama_filter">Drama</string>
+    <string name="fantastic_filter">Fantastic</string>
+    <string name="science_fiction_filter">Science F.</string>
+    <string name="delete_from_cart">delete from cart?</string>
+    <string name="delete_from_favorites">remove from favorites?</string>
 </resources>

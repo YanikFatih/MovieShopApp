@@ -9,4 +9,11 @@
     <string name="nav_item_favorites">Favoriler</string>
     <string name="nav_item_cart">Sepet</string>
     <string name="tf_label_search">Ara</string>
+    <string name="top_rated_filter">Yüksek Puan</string>
+    <string name="action_filter">Aksiyon</string>
+    <string name="drama_filter">Drama</string>
+    <string name="fantastic_filter">Fantastik</string>
+    <string name="science_fiction_filter">Bilim K.</string>
+    <string name="delete_from_cart">sepetten silinsin mi?</string>
+    <string name="delete_from_favorites">favorilerden kaldırılsın mı?</string>
 </resources>
