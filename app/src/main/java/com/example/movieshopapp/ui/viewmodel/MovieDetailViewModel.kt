@@ -40,8 +40,7 @@ class MovieDetailViewModel @Inject constructor(var moviesRepository: MoviesRepos
     fun deleteMovieCart(cartId:Int, userName:String) {
         CoroutineScope(Dispatchers.Main).launch {
             moviesRepository.deleteMovieCart(cartId, userName)
-            getMovieCart(userName)
-            //sildikten sonra tekrar yükleme işlemi olmalı ona bakılacak
+            getMovieCart(userName) //getting cart again after delete operation
         }
     }
 

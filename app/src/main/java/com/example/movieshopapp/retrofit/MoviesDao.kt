@@ -15,7 +15,7 @@ import retrofit2.http.POST
 interface MoviesDao {
     //http://kasimadalan.pe.hu/movies/getAllMovies.php
     //http://kasimadalan.pe.hu/ -> base url
-    //movies/getAllMovies.php -> api url BUNLARI SABİTLER DİYE Bİ YERE EKLEYEBİLİRİZ İLERDE !!!!
+    //movies/getAllMovies.php -> api url
 
     @GET("movies/getAllMovies.php")
     suspend fun loadAllMovies() : MoviesResponse

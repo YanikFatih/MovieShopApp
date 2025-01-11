@@ -43,8 +43,7 @@ class MovieCartViewModel @Inject constructor(var movieCartRepository: MovieCartR
     fun deleteMovieCart(cartId:Int, userName:String) {
         CoroutineScope(Dispatchers.Main).launch {
             movieCartRepository.deleteMovieCart(cartId, userName)
-            getMovieCart(userName)
-            //sildikten sonra tekrar yükleme işlemi olmalı ona bakılacak
+            getMovieCart(userName) //to get movie cart after delete operation
         }
     }
 
