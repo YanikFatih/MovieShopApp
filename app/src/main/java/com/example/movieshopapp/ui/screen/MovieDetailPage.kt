@@ -2,6 +2,7 @@ package com.example.movieshopapp.ui.screen
 
 import androidx.collection.mutableObjectListOf
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -62,15 +63,18 @@ import com.example.movieshopapp.data.entity.MovieCart
 import com.example.movieshopapp.data.entity.Movies
 import com.example.movieshopapp.ui.theme.ButtonColor
 import com.example.movieshopapp.ui.theme.InfoBoxColor
+import com.example.movieshopapp.ui.theme.InfoBoxColorDark
 import com.example.movieshopapp.ui.theme.MainColor
+import com.example.movieshopapp.ui.theme.MainColorDark
 import com.example.movieshopapp.ui.theme.TextColor
+import com.example.movieshopapp.ui.theme.TextColorDark
 import com.example.movieshopapp.ui.viewmodel.MovieDetailViewModel
 import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDetailViewModel: MovieDetailViewModel) {
+fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDetailViewModel: MovieDetailViewModel, darkTheme:Boolean = isSystemInDarkTheme()) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp
     val screenWidth = configuration.screenWidthDp
@@ -96,6 +100,7 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
     val favoritesList = movieDetailViewModel.favoritesList.observeAsState(listOf())
 
     val isFavIconClicked = remember { mutableStateOf(false) }
+    val isAddToCartClicked = remember { mutableStateOf(false) }
     var size = movieCartList.value.size
     var moviesInCart = ArrayList<String>()
     var moviesInFavorites = ArrayList<String>()
@@ -111,6 +116,9 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
         tMovieYear.value = recievedMovide.year
         tMovieDirector.value = recievedMovide.director
         tMovieDescription.value = recievedMovide.description
+        for (i in 0..movieCartList.value.size-1) {
+            moviesInCart.add(movieCartList.value[i].name)
+        }
         for (i in 0..favoritesList.value.size-1) {
             moviesInFavorites.add(favoritesList.value[i].name)
         }
@@ -129,7 +137,7 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                         },
                         colors = IconButtonColors(
                             contentColor = ButtonColor,
-                            containerColor = MainColor,
+                            containerColor = if(darkTheme) MainColorDark else MainColor,
                             disabledContentColor = TextColor,
                             disabledContainerColor = TextColor
                         )
@@ -141,7 +149,7 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                     Text("")
                 },
                 colors = TopAppBarColors(
-                    containerColor = MainColor,
+                    containerColor = if(darkTheme) MainColorDark else MainColor,
                     scrolledContainerColor = MainColor,
                     navigationIconContentColor = TextColor,
                     titleContentColor = TextColor,
@@ -149,40 +157,7 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                 )
             )
         },
-        /*bottomBar = {
-            BottomAppBar(
-                content = {
-                    NavigationBarItem(
-                        selected = false,
-                        label = { Text("Home", color = TextColor) },
-                        onClick = {},
-                        icon = { Icon(painterResource(R.drawable.home_icon), "", Modifier.size(28.dp), TextColor) }
-                    )
-                    NavigationBarItem(
-                        selected = false,
-                        label = { Text("Kategoriler", color = TextColor) },
-                        onClick = {},
-                        icon = { Icon(painterResource(R.drawable.category_icon), "", Modifier.size(28.dp), TextColor) }
-                    )
-                    NavigationBarItem(
-                        selected = false,
-                        label = { Text("Siz", color = TextColor) },
-                        onClick = {},
-                        icon = { Icon(painterResource(R.drawable.profile_icon), "", Modifier.size(28.dp), TextColor) }
-                    )
-                    NavigationBarItem(
-                        selected = false,
-                        label = { Text("Sepet", color = TextColor) },
-                        onClick = {},
-                        icon = { Icon(painterResource(R.drawable.cart_icon), "", Modifier.size(28.dp), TextColor) }
-                    )
-                },
-                modifier = Modifier.height(90.dp),
-                containerColor = MainColor,
-                contentColor = TextColor
-            )
-        }*/
-        containerColor = MainColor
+        containerColor = if(darkTheme) MainColorDark else MainColor
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -219,8 +194,8 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                                 //moviesInFavorites.add(recievedMovide.name)
                             },
                             colors = IconButtonColors(
-                                contentColor = TextColor,
-                                containerColor = MainColor,
+                                contentColor = if(darkTheme) TextColorDark else TextColor,
+                                containerColor = if(darkTheme) MainColorDark else MainColor,
                                 disabledContentColor = TextColor,
                                 disabledContainerColor = TextColor
                             ),
@@ -235,8 +210,8 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                                 }
                             },
                             colors = IconButtonColors(
-                                contentColor = TextColor,
-                                containerColor = MainColor,
+                                contentColor = ButtonColor,
+                                containerColor = if(darkTheme) MainColorDark else MainColor,
                                 disabledContentColor = TextColor,
                                 disabledContainerColor = TextColor
                             ),
@@ -244,38 +219,8 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                             Icon(painterResource(R.drawable.star_filled),"", modifier = Modifier.size((screenWidth/12).dp, (screenHeight/20).dp))
                         }
                     }
-                    /*IconButton(
-                        onClick = {
-                            for (i in 0..favoritesList.value.size-1) {
-                                moviesInFavorites.add(favoritesList.value[i].name)
-                            }
-                            if(!moviesInFavorites.contains(recievedMovide.name)) {
-                                movieDetailViewModel.addToFvorites(recievedMovide.name, recievedMovide.image, recievedMovide.category, recievedMovide.year, recievedMovide.director, recievedMovide.description)
-                            }
-                        },
-                        colors = IconButtonColors(
-                            contentColor = TextColor,
-                            containerColor = MainColor,
-                            disabledContentColor = TextColor,
-                            disabledContainerColor = TextColor
-                        ),
-                    ) {
-                        Icon(painterResource(R.drawable.star_filled),"", modifier = Modifier.size((screenWidth/12).dp, (screenHeight/20).dp))
-                    }*/
-                    /*Box(
-                        modifier = Modifier.clip(RoundedCornerShape(20.dp)).height((screenHeight/20).dp).width((screenWidth/5).dp).background(color = InfoBoxColor)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalArrangement = Arrangement.SpaceEvenly,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(painterResource(R.drawable.year_icon),"", modifier = Modifier.size(16.dp,16.dp), TextColor)
-                            Text("${recievedMovide.year}", color = TextColor, fontSize = 14.sp)
-                        }
-                    }*/
                     Box(
-                        modifier = Modifier.clip(RoundedCornerShape(20.dp)).height((screenHeight/20).dp).width((screenWidth/5).dp).background(color = InfoBoxColor)
+                        modifier = Modifier.clip(RoundedCornerShape(20.dp)).height((screenHeight/20).dp).width((screenWidth/5).dp).background(color = if(darkTheme) InfoBoxColorDark else InfoBoxColor)
                     ) {
                         Row(
                             modifier = Modifier.fillMaxSize(),
@@ -283,18 +228,18 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(painterResource(R.drawable.star_icon),"", modifier = Modifier.size(14.dp,14.dp), Color.Yellow)
-                            Text("${recievedMovide.rating}", color = TextColor, fontSize = 14.sp)
+                            Text("${recievedMovide.rating}", color = if(darkTheme) TextColorDark else TextColor, fontSize = 14.sp)
                         }
                     }
                     Box(
-                        modifier = Modifier.clip(RoundedCornerShape(20.dp)).height((screenHeight/14).dp).width((screenWidth/5).dp).background(color = InfoBoxColor)
+                        modifier = Modifier.clip(RoundedCornerShape(20.dp)).height((screenHeight/14).dp).width((screenWidth/5).dp).background(color = if(darkTheme) InfoBoxColorDark else InfoBoxColor)
                     ) {
                         Row(
                             modifier = Modifier.fillMaxSize(),
                             horizontalArrangement = Arrangement.SpaceEvenly,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("₺${recievedMovide.price}", color = TextColor, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                            Text("₺${recievedMovide.price}", color = if(darkTheme) TextColorDark else TextColor, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -307,17 +252,17 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                 Row(
 
                 ) {
-                    Icon(painterResource(R.drawable.movie_camera_icon),"", modifier = Modifier.size((screenWidth/10).dp, (screenHeight/17).dp).padding(end = 8.dp), TextColor)
+                    Icon(painterResource(R.drawable.movie_camera_icon),"", modifier = Modifier.size((screenWidth/10).dp, (screenHeight/17).dp).padding(end = 8.dp), if (darkTheme) TextColorDark else TextColor)
                     Column {
-                        Text(tMovieName.value, color = TextColor, fontSize = 19.sp, fontWeight = FontWeight.Bold)
+                        Text(tMovieName.value, color = if(darkTheme) TextColorDark else TextColor, fontSize = 19.sp, fontWeight = FontWeight.Bold)
                         Row {
-                            Text(tMovieCategory.value, color = TextColor, fontSize = 12.sp)
-                            Text(" , ${tMovieYear.value}", color = TextColor, fontSize = 12.sp)
+                            Text(tMovieCategory.value, color = if(darkTheme) TextColorDark else TextColor, fontSize = 12.sp)
+                            Text(" , ${tMovieYear.value}", color = if(darkTheme) TextColorDark else TextColor, fontSize = 12.sp)
                         }
                     }
                 }
                 Box(
-                    modifier = Modifier.clip(RoundedCornerShape(20.dp)).height((screenHeight/22).dp).width((screenWidth/2.3).dp).background(color = InfoBoxColor)
+                    modifier = Modifier.clip(RoundedCornerShape(20.dp)).height((screenHeight/22).dp).width((screenWidth/2.3).dp).background(color = if(darkTheme) InfoBoxColorDark else InfoBoxColor)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxSize(),
@@ -325,12 +270,12 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(painterResource(R.drawable.director_icon),"", modifier = Modifier.size(16.dp,16.dp), TextColor)
-                        Text(text = recievedMovide.director, color = TextColor, fontSize = 13.sp)
+                        Text(text = recievedMovide.director, color = if(darkTheme) TextColorDark else TextColor, fontSize = 13.sp)
                     }
                 }
             }
             Box(
-                modifier = Modifier.height((screenHeight/8).dp).width((screenWidth).dp).background(color = MainColor),
+                modifier = Modifier.height((screenHeight/8).dp).width((screenWidth).dp).background(color = if(darkTheme) MainColorDark else MainColor),
                 contentAlignment = Alignment.Center
             ) {
                 Row(
@@ -338,7 +283,7 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = recievedMovide.description, color = TextColor, fontSize = 13.sp)
+                    Text(text = recievedMovide.description, color = if(darkTheme) TextColorDark else TextColor, fontSize = 13.sp)
                 }
             }
             Row(
@@ -348,7 +293,7 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("₺${totalPrice.value}", color = TextColor, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text("₺${totalPrice.value}", color = if(darkTheme) TextColorDark else TextColor, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                 IconButton(onClick = {
                     var orderAmountInt = orderAmount.value
                     if (orderAmountInt > 1) {
@@ -356,7 +301,15 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                         orderAmount.value = orderAmountInt
                         totalPrice.value = totalPrice.value  - recievedMovide.price
                     }
-                }) {
+
+                },
+                    colors = IconButtonColors(
+                        contentColor = ButtonColor,
+                        containerColor = if(darkTheme) MainColorDark else MainColor,
+                        disabledContentColor = TextColor,
+                        disabledContainerColor = TextColor
+                    )
+                ) {
                     Icon(painterResource(R.drawable.decrease_count_icon),"")
                 }
                 TextField(
@@ -366,11 +319,11 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                         orderAmountString = it
                     },
                     label = {
-                        Text(orderAmount.value.toString(), color = TextColor)
+                        Text(orderAmount.value.toString(), color = if(darkTheme) TextColorDark else TextColor)
                     },
                     modifier = Modifier.clip(RoundedCornerShape(20.dp)).height((screenHeight/18).dp).width((screenWidth/5).dp),
                     colors = TextFieldDefaults.textFieldColors(
-                        containerColor = InfoBoxColor
+                        containerColor = if(darkTheme) InfoBoxColorDark else InfoBoxColor
                     )
                 )
                 IconButton(onClick = {
@@ -378,8 +331,15 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                     orderAmountInt = orderAmountInt + 1
                     orderAmount.value = orderAmountInt
                     totalPrice.value = totalPrice.value + recievedMovide.price
-                }) {
-                    Icon(painterResource(R.drawable.add_one_icon),"")
+                },
+                    colors = IconButtonColors(
+                        contentColor = ButtonColor,
+                        containerColor = if(darkTheme) MainColorDark else MainColor,
+                        disabledContentColor = TextColor,
+                        disabledContainerColor = TextColor
+                    )
+                    ) {
+                    Icon(painterResource(R.drawable.increase_icon),"")
                 }
             }
             Row(
@@ -392,22 +352,23 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = ButtonColor,
-                        contentColor = TextColor
+                        contentColor = TextColorDark
                     ),
                     onClick = {
-                        try {
+
                             for (i in 0..movieCartList.value.size-1) {
                                 moviesInCart.add(movieCartList.value[i].name)
                             }
 
                             if (moviesInCart.contains(recievedMovide.name)) {
                                 for (i in 0..size-1) {
-                                    if (movieCartList.value[i].name == recievedMovide.name) {
+                                    if (movieCartList.value[i].name == recievedMovide.name ) {
                                         movieDetailViewModel.deleteMovieCart(movieCartList.value[i].cartId, userName)
                                         movieDetailViewModel.addMovieToCart(recievedMovide.name, recievedMovide.image, recievedMovide.price, recievedMovide.category, recievedMovide.rating, recievedMovide.year, recievedMovide.director, recievedMovide.description, orderAmount.value + movieCartList.value[i].orderAmount, userName)
+
                                     }
                                 }
-                            } else {
+                            }  else {
                                 movieDetailViewModel.addMovieToCart(
                                     recievedMovide.name,
                                     recievedMovide.image,
@@ -420,10 +381,9 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
                                     orderAmount.value,
                                     userName
                                 )
+                                moviesInCart.add(recievedMovide.name)
                             }
-                        }catch (e:Exception){
 
-                        }
                     }
                 ) {
                     Row(
@@ -439,96 +399,3 @@ fun MovieDetailPage(navController: NavController, recievedMovide:Movies, movieDe
         }
     }
 }
-
-/*Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 5.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(tMovieName.value)
-                Text(tMovieDirector.value)
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 5.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text("₺${tMoviePrice.value}")
-                Text("${tMovieRating.value}/10")
-            }
-            Text("${tMovieYear.value}")
-            Text(tMovieCategory.value)
-            Text(tMovieDescription.value)*/
-/*Row(
-    modifier = Modifier
-        .fillMaxWidth()
-        .padding(start = 5.dp),
-    horizontalArrangement = Arrangement.SpaceEvenly,
-    verticalAlignment = Alignment.CenterVertically
-) {
-    IconButton(onClick = {
-        var orderAmountInt = orderAmount.value
-        if (orderAmountInt > 1) {
-            orderAmountInt = orderAmountInt - 1
-            orderAmount.value = orderAmountInt
-        }
-    }) {
-        Icon(painterResource(R.drawable.decrease_count_icon),"")
-    }
-    TextField(
-        value = "",
-        onValueChange = {
-            var orderAmountString = orderAmount.value.toString()
-            orderAmountString = it
-        },
-        label = {
-            Text(orderAmount.value.toString())
-        }
-    )
-    IconButton(onClick = {
-        var orderAmountInt = orderAmount.value
-        orderAmountInt = orderAmountInt + 1
-        orderAmount.value = orderAmountInt
-    }) {
-        Icon(painterResource(R.drawable.add_one_icon),"")
-    }
-}
-Button(
-    onClick = {
-       try {
-            for (i in 0..movieCartList.value.size-1) {
-                moviesInCart.add(movieCartList.value[i].name)
-            }
-
-            if (moviesInCart.contains(recievedMovide.name)) {
-                for (i in 0..size-1) {
-                    if (movieCartList.value[i].name == recievedMovide.name) {
-                        movieDetailViewModel.deleteMovieCart(movieCartList.value[i].cartId, userName)
-                        movieDetailViewModel.addMovieToCart(recievedMovide.name, recievedMovide.image, recievedMovide.price, recievedMovide.category, recievedMovide.rating, recievedMovide.year, recievedMovide.director, recievedMovide.description, orderAmount.value + movieCartList.value[i].orderAmount, userName)
-                    }
-                }
-            } else {
-                movieDetailViewModel.addMovieToCart(
-                    recievedMovide.name,
-                    recievedMovide.image,
-                    recievedMovide.price,
-                    recievedMovide.category,
-                    recievedMovide.rating,
-                    recievedMovide.year,
-                    recievedMovide.director,
-                    recievedMovide.description,
-                    orderAmount.value,
-                    userName
-                )
-            }
-        }catch (e:Exception){
-
-        }
-    }
-) {
-    Text("Add To Cart")
-}*/

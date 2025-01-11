@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -25,6 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        //viewmodels
         val homePageViewModel:HomePageViewModel by viewModels()
         val movieDetailViewModel:MovieDetailViewModel by viewModels()
         val movieCartViewModel:MovieCartViewModel by viewModels()
@@ -37,7 +39,9 @@ class MainActivity : ComponentActivity() {
                     homePageViewModel = homePageViewModel,
                     movieDetailViewModel = movieDetailViewModel,
                     movieCartViewModel = movieCartViewModel,
-                    favoritesPageViewModel = favoritesPageViewModel)
+                    favoritesPageViewModel = favoritesPageViewModel,
+                    isSystemInDarkTheme() //to change colors according to theme
+                )
             }
         }
     }

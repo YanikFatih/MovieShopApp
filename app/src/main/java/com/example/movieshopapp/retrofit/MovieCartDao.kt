@@ -14,7 +14,7 @@ interface MovieCartDao {
 
     @POST("movies/getMovieCart.php")
     @FormUrlEncoded
-    suspend fun getMovieCart(@Field("userName") userName:String) : Response<MovieCartResponse>
+    suspend fun getMovieCart(@Field("userName") userName:String) : Response<MovieCartResponse> //Retrofit response type to control empty cart error
 
     @POST("movies/deleteMovie.php")
     @FormUrlEncoded

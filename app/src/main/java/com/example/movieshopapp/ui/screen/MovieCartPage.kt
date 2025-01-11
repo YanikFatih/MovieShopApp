@@ -2,6 +2,7 @@ package com.example.movieshopapp.ui.screen
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,6 +47,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -62,8 +64,11 @@ import com.example.movieshopapp.R
 import com.example.movieshopapp.data.entity.MovieCart
 import com.example.movieshopapp.ui.theme.ButtonColor
 import com.example.movieshopapp.ui.theme.InfoBoxColor
+import com.example.movieshopapp.ui.theme.InfoBoxColorDark
 import com.example.movieshopapp.ui.theme.MainColor
+import com.example.movieshopapp.ui.theme.MainColorDark
 import com.example.movieshopapp.ui.theme.TextColor
+import com.example.movieshopapp.ui.theme.TextColorDark
 import com.example.movieshopapp.ui.viewmodel.MovieCartViewModel
 import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.launch
@@ -72,7 +77,7 @@ import androidx.compose.foundation.layout.Column as Column1
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieCartPage(navController: NavController, movieCartViewModel: MovieCartViewModel) {
+fun MovieCartPage(navController: NavController, movieCartViewModel: MovieCartViewModel, darkTheme:Boolean = isSystemInDarkTheme()) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp
     val screenWidth = configuration.screenWidthDp
@@ -101,7 +106,7 @@ fun MovieCartPage(navController: NavController, movieCartViewModel: MovieCartVie
                         },
                         colors = IconButtonColors(
                             contentColor = ButtonColor,
-                            containerColor = MainColor,
+                            containerColor = if(darkTheme) MainColorDark else MainColor,
                             disabledContentColor = TextColor,
                             disabledContainerColor = TextColor
                         )
@@ -109,11 +114,11 @@ fun MovieCartPage(navController: NavController, movieCartViewModel: MovieCartVie
                         Icon(painterResource(R.drawable.go_back_icon),"")
                     }
                 },
-                title = { //sonradan arama kısmı yapılabilir
+                title = {
                     Text(stringResource(R.string.my_cart_title))
                 },
                 colors = TopAppBarColors(
-                    containerColor = MainColor,
+                    containerColor = if(darkTheme) MainColorDark else MainColor,
                     scrolledContainerColor = MainColor,
                     navigationIconContentColor = TextColor,
                     titleContentColor = TextColor,
@@ -121,12 +126,12 @@ fun MovieCartPage(navController: NavController, movieCartViewModel: MovieCartVie
                 )
             )
         },
-        containerColor = MainColor,
+        containerColor = if(darkTheme) MainColorDark else MainColor,
         snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
+            SnackbarHost(hostState = snackbarHostState, modifier = Modifier.background(color = ButtonColor).clip(shape = RoundedCornerShape(10.dp)))
         }
     ) { paddingValues ->
-            if (movieCartHasError.value == false) {
+            if (movieCartHasError.value == false) { //if movie cart is not empty
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -139,11 +144,11 @@ fun MovieCartPage(navController: NavController, movieCartViewModel: MovieCartVie
                             val imageUrl = "http://kasimadalan.pe.hu/movies/images/${movieCart.image}"
 
                             Card(
-                                modifier = Modifier.padding(all = 3.dp),
+                                modifier = Modifier.padding(all = 7.dp).shadow(elevation = 5.dp, spotColor = MainColorDark, shape = RoundedCornerShape(20.dp)),
                                 shape = RoundedCornerShape(20.dp)
                             ) {
                                 Row(
-                                    modifier = Modifier.fillMaxSize().background(color = InfoBoxColor),
+                                    modifier = Modifier.fillMaxSize().background(color = if(darkTheme) InfoBoxColorDark else InfoBoxColor),
                                     horizontalArrangement = Arrangement.Start,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
@@ -154,8 +159,8 @@ fun MovieCartPage(navController: NavController, movieCartViewModel: MovieCartVie
                                     Column(
                                         modifier = Modifier.padding(start = 10.dp)
                                     ) {
-                                        Text(text = movieCart.name, color = TextColor, fontSize = 17.sp, fontWeight = FontWeight.Bold)
-                                        Text(text = " ₺${movieCart.price} x ${movieCart.orderAmount}", color = TextColor, fontSize = 15.sp)
+                                        Text(text = movieCart.name, color = if(darkTheme) TextColorDark else TextColor, fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                                        Text(text = " ₺${movieCart.price} x ${movieCart.orderAmount}", color = if(darkTheme) TextColorDark else TextColor, fontSize = 15.sp)
                                     }
                                     Column(
                                         verticalArrangement = Arrangement.Bottom,
@@ -166,13 +171,14 @@ fun MovieCartPage(navController: NavController, movieCartViewModel: MovieCartVie
                                             onClick = {
                                                 scope.launch {
                                                     val snackbar = snackbarHostState.showSnackbar(
-                                                        message = "${movieCart.name} silinsin mi?",
-                                                        actionLabel = "YES"
+                                                        message = "Delete ${movieCart.name} from cart?",
+                                                        actionLabel = "YES",
                                                     )
                                                     if (snackbar == SnackbarResult.ActionPerformed) {
                                                         movieCartViewModel.deleteMovieCart(movieCart.cartId, userName)
                                                         if (totalCartPrice.value > 0 ) {
                                                             totalCartPrice.value = totalCartPrice.value - (movieCart.price*movieCart.orderAmount)
+                                                            //total cart price calculation
                                                         }
                                                     }
                                                 }
@@ -186,15 +192,14 @@ fun MovieCartPage(navController: NavController, movieCartViewModel: MovieCartVie
                         }
                     )
                 }
-            } else if (movieCartHasError.value == true){
-                //movieCartViewModel.getMovieCart(userName)
+            } else if (movieCartHasError.value == true){ //if movie cart is empty
                 totalCartPrice.value = 0
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(stringResource(R.string.empty_cart), color = TextColor)
+                    Text(stringResource(R.string.empty_cart), color = if(darkTheme) TextColorDark else TextColor)
                 }
             }
             Box(
@@ -207,13 +212,13 @@ fun MovieCartPage(navController: NavController, movieCartViewModel: MovieCartVie
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    Text(stringResource(R.string.cart_total), color = TextColor, modifier = Modifier.padding(start = 5.dp))
-                    Text(" ₺${totalCartPrice.value}", color = TextColor)
+                    Text(stringResource(R.string.cart_total), color = TextColorDark, fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 5.dp))
+                    Text(" ₺${totalCartPrice.value}", color = TextColorDark, fontWeight = FontWeight.Bold)
                     Button(
                         modifier = Modifier.height(50.dp).width((screenWidth/2.2).dp).padding(all = 5.dp),
                         shape = RoundedCornerShape(16.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = InfoBoxColor,
+                            containerColor = if(darkTheme) InfoBoxColorDark else InfoBoxColor,
                             contentColor = ButtonColor
                         ),
                         onClick = {}

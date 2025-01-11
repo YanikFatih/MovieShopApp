@@ -1,6 +1,7 @@
 package com.example.movieshopapp.ui.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -47,15 +49,18 @@ import androidx.navigation.NavController
 import com.example.movieshopapp.R
 import com.example.movieshopapp.ui.theme.ButtonColor
 import com.example.movieshopapp.ui.theme.InfoBoxColor
+import com.example.movieshopapp.ui.theme.InfoBoxColorDark
 import com.example.movieshopapp.ui.theme.MainColor
+import com.example.movieshopapp.ui.theme.MainColorDark
 import com.example.movieshopapp.ui.theme.TextColor
+import com.example.movieshopapp.ui.theme.TextColorDark
 import com.example.movieshopapp.ui.viewmodel.FavoritesPageViewModel
 import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoritesPage(navController: NavController, favoritesPageViewModel: FavoritesPageViewModel) {
+fun FavoritesPage(navController: NavController, favoritesPageViewModel: FavoritesPageViewModel, darkTheme:Boolean = isSystemInDarkTheme()) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp
     val screenWidth = configuration.screenWidthDp
@@ -67,7 +72,7 @@ fun FavoritesPage(navController: NavController, favoritesPageViewModel: Favorite
     val favoritesList = favoritesPageViewModel.favoritesList.observeAsState(listOf())
 
     LaunchedEffect(key1 = true) {
-        favoritesPageViewModel.getFavorites()
+        favoritesPageViewModel.getFavorites() //getting favorite movies from viewModel
     }
 
     Scaffold(
@@ -76,11 +81,11 @@ fun FavoritesPage(navController: NavController, favoritesPageViewModel: Favorite
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            navController.navigate("homepage")
+                            navController.navigate("homepage") //back icon navigation
                         },
                         colors = IconButtonColors(
                             contentColor = ButtonColor,
-                            containerColor = MainColor,
+                            containerColor = if(darkTheme) MainColorDark else MainColor,
                             disabledContentColor = TextColor,
                             disabledContainerColor = TextColor
                         )
@@ -88,7 +93,7 @@ fun FavoritesPage(navController: NavController, favoritesPageViewModel: Favorite
                         Icon(painterResource(R.drawable.go_back_icon),"")
                     }
                 },
-                title = { //sonradan arama kısmı yapılabilir
+                title = {
                     if(isSeacrhing.value) {
                         TextField(
                             value = tfSearch.value,
@@ -101,7 +106,7 @@ fun FavoritesPage(navController: NavController, favoritesPageViewModel: Favorite
                                 containerColor = Color.Transparent,
                                 focusedLabelColor = Color.White,
                                 focusedIndicatorColor = Color.White,
-                                unfocusedLabelColor = TextColor,
+                                unfocusedLabelColor = if(darkTheme) TextColorDark else TextColor,
                                 unfocusedIndicatorColor = Color.White
                             )
                         )
@@ -110,10 +115,10 @@ fun FavoritesPage(navController: NavController, favoritesPageViewModel: Favorite
                     }
                 },
                 colors = TopAppBarColors(
-                    containerColor = MainColor,
+                    containerColor = if(darkTheme) MainColorDark else MainColor,
                     scrolledContainerColor = MainColor,
                     navigationIconContentColor = TextColor,
-                    titleContentColor = TextColor,
+                    titleContentColor = if(darkTheme) TextColorDark else TextColor,
                     actionIconContentColor = TextColor,
                 ),
                 actions = {
@@ -121,25 +126,39 @@ fun FavoritesPage(navController: NavController, favoritesPageViewModel: Favorite
                         IconButton(onClick = {
                             isSeacrhing.value = false
                             tfSearch.value = ""
-                        }) {
+                        },
+                            colors = IconButtonColors(
+                                contentColor = if(darkTheme) TextColorDark else TextColor,
+                                containerColor = if(darkTheme) MainColorDark else MainColor,
+                                disabledContentColor = TextColor,
+                                disabledContainerColor = TextColor
+                            )
+                        ) {
                             Icon(painterResource(R.drawable.close_icon), "")
                         }
                     } else {
                         IconButton(onClick = {
                             isSeacrhing.value = true
-                        }) {
+                        },
+                            colors = IconButtonColors(
+                                contentColor = if(darkTheme) TextColorDark else TextColor,
+                                containerColor = if(darkTheme) MainColorDark else MainColor,
+                                disabledContentColor = TextColor,
+                                disabledContainerColor = TextColor
+                            )
+                        ) {
                             Icon(painterResource(R.drawable.search_icon), "")
                         }
                     }
                 }
             )
         },
-        containerColor = MainColor,
+        containerColor = if(darkTheme) MainColorDark else MainColor,
         snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
+            SnackbarHost(hostState = snackbarHostState, modifier = Modifier.background(color = ButtonColor).clip(shape = RoundedCornerShape(10.dp)))
         }
     ) { paddingValues ->
-        LazyColumn(
+        LazyColumn( // to show list of favorites
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
@@ -147,19 +166,19 @@ fun FavoritesPage(navController: NavController, favoritesPageViewModel: Favorite
             items(
                 count = favoritesList.value.count(),
                 itemContent = {
-                    var favoriteMovie = favoritesList.value[it]
-                    val imageUrl = "http://kasimadalan.pe.hu/movies/images/${favoriteMovie.image}"
+                    var favoriteMovie = favoritesList.value[it] //favorite item
+                    val imageUrl = "http://kasimadalan.pe.hu/movies/images/${favoriteMovie.image}" //image url
 
                     Card(
-                        modifier = Modifier.padding(all = 3.dp),
+                        modifier = Modifier.padding(all = 7.dp).shadow(elevation = 5.dp, spotColor = MainColorDark, shape = RoundedCornerShape(20.dp)),
                         shape = RoundedCornerShape(20.dp)
                     ) {
                         Row(
-                            modifier = Modifier.fillMaxSize().background(color = InfoBoxColor),
+                            modifier = Modifier.fillMaxSize().background(color = if(darkTheme) InfoBoxColorDark else InfoBoxColor),
                             horizontalArrangement = Arrangement.Start,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            GlideImage(
+                            GlideImage( // item image
                                 imageModel = imageUrl,
                                 modifier = Modifier.size(100.dp, 150.dp).padding(5.dp).clip(shape = RoundedCornerShape(15.dp)),
                             )
@@ -168,25 +187,25 @@ fun FavoritesPage(navController: NavController, favoritesPageViewModel: Favorite
                                 verticalArrangement = Arrangement.SpaceEvenly
                             ) {
                                 Row() {
-                                    Icon(painterResource(R.drawable.movie_camera_icon),"", modifier = Modifier.size((screenWidth/12).dp, (screenHeight/19).dp).padding(end = 8.dp), TextColor)
+                                    Icon(painterResource(R.drawable.movie_camera_icon),"", modifier = Modifier.size((screenWidth/12).dp, (screenHeight/19).dp).padding(end = 8.dp), if(darkTheme) TextColorDark else TextColor)
                                     Column {
-                                        Text(text = favoriteMovie.name, color = TextColor, fontSize = 17.sp, fontWeight = FontWeight.Bold)
-                                        Text(text = " ${favoriteMovie.category}, ${favoriteMovie.year}", color = TextColor, fontSize = 12.sp)
+                                        Text(text = favoriteMovie.name, color = if(darkTheme) TextColorDark else TextColor, fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                                        Text(text = " ${favoriteMovie.category}, ${favoriteMovie.year}", color = if(darkTheme) TextColorDark else TextColor, fontSize = 12.sp)
                                     }
                                 }
                                 Box(
-                                    modifier = Modifier.clip(RoundedCornerShape(20.dp)).height((screenHeight/25).dp).width((screenWidth/2.6).dp).background(color = MainColor)
+                                    modifier = Modifier.clip(RoundedCornerShape(20.dp)).height((screenHeight/25).dp).width((screenWidth/2.6).dp).background(color = if(darkTheme) MainColorDark else MainColor)
                                 ) {
                                     Row(
                                         modifier = Modifier.fillMaxSize(),
                                         horizontalArrangement = Arrangement.Center,
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Icon(painterResource(R.drawable.director_icon),"", modifier = Modifier.size(14.dp,14.dp).padding(end = 3.dp), TextColor)
-                                        Text(text = favoriteMovie.director, color = TextColor, fontSize = 12.sp)
+                                        Icon(painterResource(R.drawable.director_icon),"", modifier = Modifier.size(14.dp,14.dp).padding(end = 3.dp), if(darkTheme) TextColorDark else TextColor)
+                                        Text(text = favoriteMovie.director, color = if(darkTheme) TextColorDark else TextColor, fontSize = 12.sp)
                                     }
                                 }
-                            }
+                            }//column showing movie name, category, year and director
                             Column(
                                 verticalArrangement = Arrangement.Bottom,
                                 horizontalAlignment = Alignment.End,
@@ -196,8 +215,8 @@ fun FavoritesPage(navController: NavController, favoritesPageViewModel: Favorite
                                     onClick = {
                                         scope.launch {
                                             val snackbar = snackbarHostState.showSnackbar(
-                                                message = "${favoriteMovie.name} favorilerden kaldırılsın mı?",
-                                                actionLabel = "YES"
+                                                message = "Remove ${favoriteMovie.name} from favorites?",
+                                                actionLabel = "YES",
                                             )
                                             if (snackbar == SnackbarResult.ActionPerformed) {
                                                 favoritesPageViewModel.deleteFromFavorites(favoriteMovie.id)
@@ -207,7 +226,7 @@ fun FavoritesPage(navController: NavController, favoritesPageViewModel: Favorite
                                 ) {
                                     Icon(painterResource(R.drawable.delete_icon), "", modifier = Modifier.size(24.dp,24.dp) ,ButtonColor)
                                 }
-                            }
+                            }//delete button part
                         }
                     }
                 }

@@ -1,5 +1,7 @@
 package com.example.movieshopapp.ui.screen
 
+import android.content.res.Resources.Theme
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -17,22 +19,22 @@ import com.google.gson.Gson
 fun PageNavigations(homePageViewModel: HomePageViewModel,
                     movieDetailViewModel: MovieDetailViewModel,
                     movieCartViewModel: MovieCartViewModel,
-                    favoritesPageViewModel: FavoritesPageViewModel) {
+                    favoritesPageViewModel: FavoritesPageViewModel, darkTheme: Boolean = isSystemInDarkTheme()) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "homepage") {
         composable("homepage") {
-            HomePage(navController = navController, homePageViewModel = homePageViewModel)
+            HomePage(navController = navController, homePageViewModel = homePageViewModel, darkTheme)
         }
         composable("movieDetailPage/{movie}", arguments = listOf(navArgument("movie") { type = NavType.StringType })) {
             val json = it.arguments?.getString("movie")
             val obj = Gson().fromJson(json, Movies::class.java)
-            MovieDetailPage(navController = navController, recievedMovide = obj, movieDetailViewModel = movieDetailViewModel)
+            MovieDetailPage(navController = navController, recievedMovide = obj, movieDetailViewModel = movieDetailViewModel, darkTheme)
         }
         composable("movieCartPage") {
-            MovieCartPage(navController = navController, movieCartViewModel = movieCartViewModel)
+            MovieCartPage(navController = navController, movieCartViewModel = movieCartViewModel, darkTheme)
         }
         composable("favoritesPage") {
-            FavoritesPage(navController = navController, favoritesPageViewModel = favoritesPageViewModel)
+            FavoritesPage(navController = navController, favoritesPageViewModel = favoritesPageViewModel, darkTheme)
         }
     }
 }
